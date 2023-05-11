@@ -1,0 +1,21 @@
+{
+    "name": "service/courier",
+    "autoload": {
+        "files": [  "backend/helpers/error_handler.php", "backend/helpers/authentication.php", "backend/helpers/path_finder.php",
+                    "backend/config/globals.php", "backend/helpers/msg.php", "backend/helpers/security.php", "backend/helpers/request.php"
+                ],
+        "psr-4": {
+            "App\\Models\\": "backend/app/Models/",
+            "App\\Http\\Controllers\\": "backend/app/Http/Controllers/",
+            "App\\Events\\": "backend/app/Events/",
+            "App\\Providers\\": "backend/app/Providers/",
+            "App\\Listeners\\": "backend/app/Listeners/",
+            "App\\Http\\Exceptions\\": "backend/app/Http/Exceptions/",
+            "PHPMailer\\": "backend/phpmailer/",
+            "Utility\\": "backend/Utility/"
+
+        }
+    },
+
+    "require": {}
+}
