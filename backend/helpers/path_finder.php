@@ -7,10 +7,16 @@
     function base_path_http($uri = null) {
         //remove the starting slashes as the base path is already ending with slash
         $uri = preg_replace("/^\/+/", '', $uri);
+
         $project_folder = basename(dirname(dirname(__DIR__)));
-        $base_site = $_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"]."/";
-        $sub_dirs = preg_replace("/$project_folder*[^`]*/", "$project_folder/", $_SERVER["SCRIPT_NAME"]);
-        $base_path = $project_folder == "public_html" ? $base_site : $base_site.$sub_dirs;
+        $domain_url = $_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"];
+
+        if ($project_folder == basename($_SERVER["DOCUMENT_ROOT"])) {
+            $base_path = $domain_url."/";
+        } else {
+            $sub_dirs = preg_replace("/$project_folder*[^`]*/", "$project_folder/", $_SERVER["SCRIPT_NAME"]);
+            $base_path = $domain_url.$sub_dirs;
+        }
 
         return $base_path."$uri";
     }
