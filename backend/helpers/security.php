@@ -68,28 +68,42 @@
 
         $token = md5(uniqid(mt_rand(), true)); //hex2bin(random_bytes(32));
         //add to the session store
-        $_SESSION["csrf_token"] = $token;
 
+        $_SESSION["csrf_token"] = $token;
+        
         return $token;
     }
 
     //This function sets cookie token for the auth user in the system
     function setAuthCookie($userId) {
-        $name="token";
-        $token=str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@...%%%%&*_-=++==");
-        $value=$token;
-        $expiry_time_plus_secs=$GLOBALS["token_expiry_secs"];
 
-        //set session value 
+        //set server session file and the corresponding http client's session cookie params 
         $_SESSION["user"] = $userId;
-        
-        return setcookie($name, $value, $expiry_time_plus_secs, "/");   
+
+        return isset($_SESSION["user"]); 
     }
 
     //This function revokes the user token and sets the info to null and 0 on db
     function unsetAuthCookie(){
-        setcookie("token", null, time() - 3600, "/");
         //then unset the session last
+        session_destroy_manager();
+    }
+
+    function session_start_manager() {
+        $expiry_time_plus_secs=$GLOBALS["token_expiry_secs"];
+
+        //set these ini configurations before session starts anywhere on the script
+        //ini_set("session.name", "PHPsessIdCookieName"); OR
+        session_name("PHPsessIdCookieName");
+
+        //session_set_cookie_params(123445566, '/', $_SERVER["HTTP_HOST"], true, true); Option 1 Or assoc array
+        session_set_cookie_params(["lifetime" => $expiry_time_plus_secs, "path" => "/", "domain" =>  $_SERVER["HTTP_HOST"], "secure" => true, "httponly" => true, "samesite" => "lax"]);
+
+        session_start();
+        //setcookie(session_name(), session_id(), time() + 60*60, "/"); updates the already set session cookie
+    }
+
+    function session_destroy_manager() {
         session_unset();
         session_destroy();
     }
@@ -98,8 +112,7 @@
     function tryAuthUserLogin($userId){
         $authUsernameKey = AuthServiceProvider::AUTH_CHECK_COLUMNS[0];
 
-            if(isset($_COOKIE["token"]) && isAuth() &&  authUser()[0][$authUsernameKey] == $userId){
-                $rawValue=$_COOKIE["token"];
+            if(isAuth() &&  authUser()[0][$authUsernameKey] == $userId){
     
                 return true;
             }
@@ -114,7 +127,7 @@
     */
 
     function authPanelChecker($panel = null) : void {
-        session_start();
+        session_start_manager();
 
         if ($panel != null) {
             if (!in_array($panel, $GLOBALS["ROLE_LIST"])) {
