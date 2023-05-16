@@ -1,6 +1,6 @@
 <?php
     require_once __DIR__.'/vendor/autoload.php';
-    authPanelChecker(); //session needs to start for csrf_token form
+    session_start_manager();
 ?>
 
 <!Doctype html>

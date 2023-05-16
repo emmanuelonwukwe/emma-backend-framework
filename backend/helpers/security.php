@@ -90,6 +90,9 @@
     }
 
     function session_start_manager() {
+        //configure the session saving path for all the sessions of this application. Ensure that the storage/session dir exists
+        session_save_path(storage_path("/sessions"));
+        
         $expiry_time_plus_secs=$GLOBALS["token_expiry_secs"];
 
         //set these ini configurations before session starts anywhere on the script
@@ -127,8 +130,6 @@
     */
 
     function authPanelChecker($panel = null) : void {
-        session_start_manager();
-
         if ($panel != null) {
             if (!in_array($panel, $GLOBALS["ROLE_LIST"])) {
                 throw new MyException("Specified panel is not in the global ROLE_LIST");

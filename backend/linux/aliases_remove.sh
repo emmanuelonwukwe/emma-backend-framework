@@ -10,4 +10,4 @@ source $HOME/.bashrc;
 echo $LINE;
 echo "===============    MESSAGE  ====================="
 echo $LINE;
-echo "emma_backend commands removed from this comouter [user .bashrc]. To delete emma_backend_ ...commands, You may need to run this command now#: source $HOME/.bashrc";
+echo "emma_backend commands removed from this computer [user .bashrc]. To delete emma_backend_ ...commands, You may need to run this command now#: source $HOME/.bashrc";

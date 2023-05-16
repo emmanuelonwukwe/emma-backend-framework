@@ -5,7 +5,7 @@
 
     require_once __DIR__.'/vendor/autoload.php';
 
-    authPanelChecker();
+    session_start_manager();
 
     //registration route
     if(isset($_POST['action']) && $_POST["action"] == 'register') {

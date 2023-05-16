@@ -32,6 +32,11 @@
     migrateDown();
 >
 ```
+#### Session management
+- To start session on a page that needs session, call this function `session_start_manager()` at the top of the page.
+
+- Caution: call session_start_manager() instead of session_start() as some settings are added to the manager.
+
 
 ## Quick Registration
 - In the RegisterController, do the following
@@ -162,7 +167,7 @@
 - B. The complete password reset form will ask the user for his new_password and confirm_password fields
 - call `ResetPasswordController::completeReset(...)` on submit
 
-- C. To change account password, `authUser() profile page` form must have these keys exactly [old_password, new_password, confirm_password] in the form field
+- C. To change account password, `authUser()` profile page form must have these keys exactly [old_password, new_password, confirm_password] in the form field
 - call - call `ResetPasswordController::changeAccountPassword(...)` on submit
 
 ## Creating data to db model
@@ -225,8 +230,7 @@
 
 ## API users
 
-- After login, generate a personal access token, save it on the user device store. Pass it to the header `Token` of the http client you are using and make subsequent requests with it to allow all authentication related functions to work eg authUser(), isAuth(), authPanelChecker($panel) etc;
-- `authPanelChecker()` works only to start session on any auth/or unauthenticated routes but passing a panel args to it requies that the user must be auth by session or token to access the panel.
+- After login, generate a personal access token, save it on the user device store. Pass it to the header `Token` of the http client you are using and make subsequent requests with it to allow all authentication related functions to work eg` authUser(), isAuth(), authPanelChecker($panel)` etc;
 
 ## Csrf management
 - call `csrf_token()` method in input field to generate token. Ensure that session is started before the function call else it will not set the session for the token.
@@ -287,7 +291,7 @@
     //redirect() to properly redirect
     base_path($uri) //return the root path of our app .../$uri check backend/helpers/path_finder.php to get more path helpers
     responseJson(array $dataArrayToEncode, $http_status_code = 200) // used mostly if requestIsAjax 
-    authPanelChecker($panel = null) // to add session_start to a route and to regulate `user` and `admin` panels respectively
+    authPanelChecker($panel) // Helps to regulate `user` and `admin` panels respectively
     csrf_token() // used mostly in form fields name=`csrf_token` to set and get csrf token for each form request
     Db::csrf_verify() // all models inherited this function for checking csrf_tokens in controllers it throws error if  the token is invalid
     filter(string $data) // used to filter input fields against xss
@@ -299,11 +303,10 @@
 ```
 ## Middleware management
 - The global middleware for regulating the user and admin dashboard can be used in the route or the controller
--  authPanelChecker() : this only starts session on the page used mostly by unauth routes/controllers that need session eg login, registration, reset password, and complete password reset routes
 
--  authPanelChecker("user") : this starts session on the users page only. Used mostly by user auth routes/controllers to regulate the user panel only.
+-  authPanelChecker("user") : Used mostly by user auth routes/controllers to regulate the user panel only.
 
--  authPanelChecker("admin") : this starts session on the admin page only. Used mostly by admin auth routes/controllers to regulate the admin panel only.
+-  authPanelChecker("admin") : Used mostly by admin auth routes/controllers to regulate the admin panel only.
 
 ## Image upload functionality
 - In your form you can do multiple images eg <input type="file" name="myimage[]" accept=".jpg,.png,.jpeg" multiple>
@@ -346,39 +349,48 @@
 ```
 
 ## Using emma_backend_ ...commands to fasten your new projects (First(One) time setting up)
-- 1 - Ensure to clone emma-backend-framework in you htdocs
+- 1 - Ensure to clone emma-backend-framework on any directory 
 - 2 - Open your git bash (shell) and type this command ```cd emma-backend-framework``` then
-- 3 - Run this command ```bash  emma_command_setup.bash``` then
-- 4 - Run this command ```source  $HOME/.bashrc```
-- 5 - Now you have successfully installed and set up emma_backend_ ...commands on your system, navigate out of here to your project root as all emma_backend commands must be done on any of your projects root. 
+- 3 - Run this command ```./emma_command_setup.bash``` then
+- 4 - Now you have successfully installed and set up emma backend ...commands on your system, navigate out of here to your project root as all emma backend commands must be done on any of your projects root. 
+- 5 - Any time you want to create a new project just enter the project folder and run `emma backend add`
 
-##### List of emma_backend_ ...commands and their functions
-- On your project root just run this command ```emma_backend_add`` then hit enter key. Congrats, emma_backend files are installed in your project. 
-- All emma_backend command start with emma_backend_ followed by the command
-- All emma_backend command must be executed on the project root directory.
-- Tip: To quickly see all these commands on your shell, type `emma_backend` then double tap your tab key
+##### List of emma backend commands and their functions
+- On your project root just run this command ```emma backend add`` then hit enter key. Congrats, emma backend project files are installed on your project. 
+- All emma backend command start with `emma backend` ...followed by the command
+- All emma backend command must be executed on the project root directory.
+- Tip: To quickly see all these commands on your shell, type `emma backend list`
 
 ```sh
-# 1 - install emma backend automatically to a new project root
-emma_backend_add
 
-# 2 - removes emma backend automatically from a project root
-emma_backend_remove
-
-# 3 - starts php inbuilt server on port[80 or 8000 or 8080] in the project root
-emma_backend_serve80
-emma_backend_serve8000
-emma_backend_serve8080
-
-#4 - making classes
-emma_backend_make_controller
-emma_backend_make_model
-emma_backend_make_event
-emma_backend_make_exception
-emma_backend_make_listener
-emma_backend_make_provider
-emma_backend_make_utility
-emma_backend_make_migration
+########################################################
+  ######   LIST OF AVAILABLE EMMA COMMANDS       ######
+########################################################
+1. emma backend add  --Helps you add emma backend framework to a new project
+--------------------------------------------------------
+2. emma backend remove  --Helps you remove emma backend framework from project -: Warning do not run this
+    command on a project you have built else every file of emma backend will vanish away
+--------------------------------------------------------
+3. emma backend serve [PORT] --Helps you start inbuilt php server at port 80 or your defined [port number] e.g 8080 on your project root
+--------------------------------------------------------
+4. emma backend make migration --Helps you make a migration table file
+--------------------------------------------------------
+5. emma backend make model --Helps you make a model class
+--------------------------------------------------------
+6. emma backend make controller --Helps you make a controller class
+--------------------------------------------------------
+7. emma backend make event --Helps you make an event class
+--------------------------------------------------------
+8. emma backend make listener --Helps you make a listener class
+--------------------------------------------------------
+9. emma backend make exception --Helps you make an exception class
+--------------------------------------------------------
+10. emma backend make provider --Helps you make a provider class
+--------------------------------------------------------
+11. emma backend make utility --Helps you make an utility class
+--------------------------------------------------------
+12. emma backend list  --Helps you see this list of available commands
+--------------------------------------------------------
 
 ```
 

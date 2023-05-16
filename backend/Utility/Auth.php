@@ -80,8 +80,6 @@
 
         //This sets the session state of the user we want to login
         public static function login($userId) {
-            session_start_manager();
-
             //open session to enable ajax call create token which is going to be closed by PAToken::createToken() automatically
             //if it is ajax call.
 

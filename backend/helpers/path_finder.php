@@ -1,7 +1,4 @@
 <?php
-    //configure/override the ini session saving path for all the sessions of this application. Ensure that the storage/session dir exists
-    session_save_path(storage_path("/sessions"));
-    
     //This function gets the http base path of our app if called on null param or returns the url from base path/
     //Used mostly for redirect
     function base_path_http($uri = null) {

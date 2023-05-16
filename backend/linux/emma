@@ -1,0 +1,152 @@
+#!/bin/bash
+#This software is developed by Onwukwe emmanuel for commanding emma backend framework
+
+#define functions to be used in the entire script first
+
+## THIS COMMAND MUST BE IN THE USER/bin directory and the bin directory must also be in the PATH env variable
+LINE="--------------------------------------------------------";
+HASH="########################################################";
+
+#List of availabale commands 
+commands_list(){
+    echo $HASH;
+    echo "  ######   LIST OF AVAILABLE EMMA COMMANDS       ######";
+    echo $HASH;
+    echo "1. emma backend add  --Helps you add emma backend framework to a new project";
+    echo $LINE;
+
+    echo "2. emma backend remove  --Helps you remove emma backend framework from project -: Warning do not run this 
+    command on a project you have built else every file of emma backend will vanish away";
+    echo $LINE;
+
+    echo "3. emma backend serve [PORT] --Helps you start inbuilt php server at port 80 or your defined [port number] e.g 8080 on your project root";
+    echo $LINE;
+
+    echo "4. emma backend make migration --Helps you make a migration table file";
+    echo $LINE;
+
+    echo "5. emma backend make model --Helps you make a model class";
+    echo $LINE;
+
+    echo "6. emma backend make controller --Helps you make a controller class";
+    echo $LINE;
+
+    echo "7. emma backend make event --Helps you make an event class";
+    echo $LINE;
+
+    echo "8. emma backend make listener --Helps you make a listener class";
+    echo $LINE;
+
+    echo "9. emma backend make exception --Helps you make an exception class";
+    echo $LINE;
+
+    echo "10. emma backend make provider --Helps you make a provider class";
+    echo $LINE;
+
+    echo "11. emma backend make utility --Helps you make an utility class";
+    echo $LINE;
+
+    echo "12. emma backend list  --Helps you see this list of available commands";
+    echo $LINE;
+}
+
+#The add backend -: command as function
+function add(){
+    cp -R  ~/.emma_backend_framework_clone/emma-backend-framework/* .;
+    rm ./emma_command_setup.bash;
+}
+
+#Remove backend -: command as function
+remove(){
+    rm -R  ./backend ./vendor ./composer.json ./README.md ./test.php ./testapi.php;
+}
+
+function list() {
+    commands_list;
+}
+
+
+function serve() {
+    #positioned parameters
+    #port= $1;
+
+    if [[ $2 == "serve" ]]; then
+        if [    $3  ]; then
+            php -S localhost:$3;
+            else
+            php -S localhost:80;
+            echo serving default;
+        fi
+    fi
+}
+
+function make() {
+    case $3 in
+        'controller')
+            bash ./backend/linux/make_controller.bash;
+        ;;
+
+        'event')
+            bash ./backend/linux/make_event.bash;
+        ;;
+
+        'listener')
+            bash ./backend/linux/make_listener.bash;
+        ;;
+
+        'model')
+            bash ./backend/linux/make_model.bash;
+        ;;
+
+        'provider')
+            bash ./backend/linux/make_provider.bash;
+        ;;
+
+        'utility')
+            bash ./backend/linux/make_utility.bash;
+        ;;
+
+        'migration')
+            bash ./backend/linux/make_migration.bash;
+        ;;
+
+        *)
+            echo "Unknown emma command ran XXXXX: Get help with this command -: emma backend list"
+        ;;
+    esac
+}
+
+
+
+#serve "arg1_ is redundant not used in body def but must is required" $2
+
+if [[ $1 == "backend" ]]; then
+    case $2 in
+        'list')
+            commands_list;
+        ;;
+
+        'serve')
+            serve $1 $2 $3;
+        ;;
+
+        'add')
+            add;
+        ;;
+
+        remove)
+            remove;
+        ;;
+
+        make)
+            make $1 $2 $3;
+        ;;
+
+        *)
+            echo "Invalid emma command issued get help with this command -: emma backend list"
+        ;;
+    esac
+
+else
+    echo "You have entered a wrong emma command; to see help of the available commands try -: emma backend list";
+fi

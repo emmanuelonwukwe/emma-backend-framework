@@ -11,7 +11,6 @@ echo $LINE;
 echo "Enter the $MAKE class name or type 0 to quit";
 read CLASSNAME;
 
-
 if [    $CLASSNAME == 0 ]; then
     echo $ERROR;
     echo "You have quited this action and no $MAKE class was made";
